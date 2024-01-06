@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 
-const urlScheme = new mongoose.Scheme({
+const urlScheme = new mongoose.Schema({
 	urlCode: String,
 	longUrl: String,
 	shortUrl: String,
 	date: { type: String, default: Date.now },
 });
 
-export default mongoose.model('Url', urlScheme);
+const Url = mongoose.model('Url', urlScheme);
+export default Url;
