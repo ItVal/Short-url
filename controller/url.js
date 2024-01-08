@@ -1,5 +1,48 @@
 import Url from '../models/url.js';
 
+import validUrl from 'valid-url';
+import shortid from 'shortid';
+import config from 'config';
+
+export const handleShortUrl = async (req, res, next) => {
+	const { longUrl } = req.body;
+	const baseUrl = config.get('baseUrl');
+	//check base url
+	if (!validUrl.isUri(baseUrl)) {
+		return res.status(401).json('invalid url');
+	}
+
+	//create short url
+	const urlCode = shortid.generate();
+
+	//check long url
+	// if (validUrl.isUri(longUrl)) {
+	try {
+		let url = await Url.findOne({});
+		if (url) {
+			res.json(url);
+		} else {
+			const shortUrl = baseUrl + '/' + urlCode;
+			url = new Url({
+				longUrl,
+				shortUrl,
+				urlCode,
+				date: new Date(),
+			});
+
+			await url.save();
+			res.json(url);
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(500).json('Server error');
+	}
+	// }
+	//  else {
+	// 	res.status(401).json('Invalid long url');
+	// }
+};
+
 export const getAllUrls = async (req, res, next) => {
 	try {
 		const allurls = await Url.find();
@@ -16,7 +59,7 @@ export const getAllUrls = async (req, res, next) => {
 	}
 };
 
-export const getRedirectUrl = async (req, res) => {
+export const RedirectOriginUrl = async (req, res) => {
 	try {
 		const url = await Url.findOne({ urlCode: req.params.code });
 		if (url) {
