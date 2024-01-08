@@ -11,12 +11,14 @@ export const handleShortUrl = async (req, res, next) => {
 	if (!validUrl.isUri(baseUrl)) {
 		return res.status(401).json('invalid url');
 	}
-
 	//create short url
 	const urlCode = shortid.generate();
 
 	//check long url
-	// if (validUrl.isUri(longUrl)) {
+	if (!validUrl.isUri(longUrl)) {
+		console.log(longUrl);
+		return res.status(401).json('Invalid long url');
+	}
 	try {
 		let url = await Url.findOne({});
 		if (url) {
@@ -37,10 +39,6 @@ export const handleShortUrl = async (req, res, next) => {
 		console.log(err);
 		res.status(500).json('Server error');
 	}
-	// }
-	//  else {
-	// 	res.status(401).json('Invalid long url');
-	// }
 };
 
 export const getAllUrls = async (req, res, next) => {

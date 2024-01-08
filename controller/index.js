@@ -1,1 +1,1 @@
-export { getAllUrls, RedirectOriginUrl } from './url.js';
+export { getAllUrls, RedirectOriginUrl, handleShortUrl } from './url.js';
