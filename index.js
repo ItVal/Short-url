@@ -1,6 +1,7 @@
 import express from 'express';
 import connectDB from './config/db.js';
-import router from './routes/url.js';
+import postURL from './routes/url.js';
+import getURL from './routes/index.js';
 
 const app = express();
 
@@ -10,7 +11,8 @@ connectDB();
 app.use(express.json({ extended: false }));
 
 //routes define
-app.use('/api/url', router);
+app.use('/api/url', postURL);
+app.use('/api', getURL);
 
 const PORT = 2025;
 
