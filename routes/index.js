@@ -2,7 +2,9 @@ import express from 'express';
 const router = express.Router();
 
 import Url from '../models/url.js';
+import { getAllUrls } from '../controller/index.js';
 
+router.get('/all', getAllUrls);
 //route Get /:code
 // desc Redirect to long/original Url
 router.get('/:code', async (req, res) => {
@@ -18,4 +20,5 @@ router.get('/:code', async (req, res) => {
 		res.status(500).json('Internal Server Error');
 	}
 });
+
 export default router;
