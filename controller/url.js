@@ -1,13 +1,14 @@
 import Url from '../models/url.js';
+import 'dotenv/config.js';
 
 import validUrl from 'valid-url';
 import shortid from 'shortid';
-import config from 'config';
+// import config from 'config';
 
 export const handleShortUrl = async (req, res, next) => {
 	const { longUrl } = req.body;
 
-	const baseUrl = config.get('baseUrl');
+	const baseUrl = process.env.baseUrl;
 	//check base url
 	if (!validUrl.isUri(baseUrl)) {
 		return res.status(401).json('invalid url');
@@ -40,7 +41,7 @@ export const handleShortUrl = async (req, res, next) => {
 				urlCode,
 				date: new Date(),
 			});
-			console.log(url);
+
 			await url.save();
 			res.json(url);
 		}
@@ -56,7 +57,7 @@ export const getAllUrls = async (req, res, next) => {
 		if (!allurls) {
 			res.status(200).json('no url found');
 		}
-		// res.json(allurls);
+
 		return res.status(200).json({
 			message: 'Urls fetched successfully',
 			data: allurls,
@@ -69,7 +70,7 @@ export const getAllUrls = async (req, res, next) => {
 export const RedirectOriginUrl = async (req, res) => {
 	try {
 		const url = await Url.findOne({ urlCode: req.params.code });
-		console.log(req.params.code);
+
 		if (url) {
 			return res.redirect(url.longUrl);
 		} else {
